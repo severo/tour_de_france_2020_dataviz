@@ -28,9 +28,3 @@ Deploy to a personal domain (tour-de-france-2019-dataviz.[MYNOWUSER].now.sh):
 ```bash
 npm run deploy
 ```
-
-Note that any push to the GitHub repository will also trigger a deploy on now.sh
-(you will receive a mail with the URL and its aliases):
-
-- tour-de-france-2019-dataviz.[MYNOWUSER].now.sh
-- tour-de-france-2019-dataviz-git-master.[MYNOWUSER].now.sh
