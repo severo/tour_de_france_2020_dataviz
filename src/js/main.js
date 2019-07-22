@@ -67,9 +67,9 @@ function showLinks(riders) {
   riders
     .append('line')
     .attr('x1', d => d.previous.rank * 50)
-    .attr('y1', d => 100)
+    .attr('y1', 100)
     .attr('x2', d => d.rank * 50)
-    .attr('y2', d => 0);
+    .attr('y2', 0);
 }
 
 function showRiders(riders) {
