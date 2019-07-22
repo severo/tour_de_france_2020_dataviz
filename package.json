@@ -50,5 +50,8 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
       "pre-commit": "npm run test"
     }
+  },
+  "dependencies": {
+    "d3": "^5.9.7"
   }
 }
