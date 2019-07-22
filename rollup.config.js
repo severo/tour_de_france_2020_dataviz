@@ -10,7 +10,7 @@ export default {
     warn(warning);
   },
   output: {
-    file: `dist/js/main.js`,
+    file: `dist/main.js`,
     name: '${meta.name}',
     format: 'iife',
     indent: false,

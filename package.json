@@ -16,7 +16,7 @@
     "url": "git+https://github.com/severo/tour_de_france_2019_dataviz.git"
   },
   "scripts": {
-    "build": "rollup -c && cp src/index.html dist/index.html",
+    "build": "rollup -c && cp src/index.html dist/index.html && cp src/css/main.css dist/main.css",
     "deploy": "now",
     "deploy:staging": "now --target staging",
     "now-build": "npm run build",

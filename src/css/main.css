@@ -1,0 +1,18 @@
+#wrapper {
+  overflow-x: scroll;
+}
+
+#stages-svg {
+}
+
+#stages-svg #riders .rider circle {
+  stroke: black;
+  fill: white;
+}
+#stages-svg #riders .rider text {
+  stroke: none;
+  fill: black;
+}
+#stages-svg #links .link line {
+  stroke: black;
+}

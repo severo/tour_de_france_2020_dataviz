@@ -9,17 +9,28 @@ async function load() {
     (general, stage, id) => {
       general.push(
         stage
-          .map(rider => ({
-            name: rider.name,
-            number: rider.number,
-            team: rider.team,
-            time: general[id].time + rider.time - rider.bonif + rider.penal,
-          }))
+          .map(rider => {
+            const previousId = general[id].findIndex(
+              r => r.number === rider.number
+            );
+            return {
+              previous: general[id][previousId],
+              name: rider.name,
+              number: rider.number,
+              team: rider.team,
+              time:
+                general[id][previousId].time +
+                rider.time -
+                rider.bonif +
+                rider.penal,
+            };
+          })
           .sort(
             (a, b) =>
               a.time > b.time || (a.time === b.time && a.number > b.number)
           )
           .map((rider, id) => ({
+            previous: rider.previous,
             name: rider.name,
             number: rider.number,
             team: rider.team,
@@ -52,14 +63,21 @@ async function load() {
   svg(general);
 }
 
+function showLinks(riders) {
+  riders
+    .append('line')
+    .attr('x1', d => d.previous.rank * 50)
+    .attr('y1', d => 100)
+    .attr('x2', d => d.rank * 50)
+    .attr('y2', d => 0);
+}
+
 function showRiders(riders) {
   riders
     .append('circle')
     .attr('x', 0)
     .attr('y', 0)
-    .attr('r', 20)
-    .style('stroke', 'black')
-    .style('fill', 'none');
+    .attr('r', 20);
 
   riders
     .append('text')
@@ -67,9 +85,38 @@ function showRiders(riders) {
     .attr('y', 0)
     .text(d => d.number)
     .attr('text-anchor', 'middle')
-    .attr('dy', '0.3em')
-    .style('fill', 'black')
-    .style('stroke', 'none');
+    .attr('dy', '0.3em');
+}
+
+function addLinksStage(links, general, stageId, height) {
+  links
+    .append('g')
+    .attr('id', `stage${stageId - 1}to${stageId - 1}`)
+    .attr('transform', `translate(0, ${height - 50 - stageId * 100})`)
+    .selectAll('g')
+    .data(general[stageId])
+    .enter()
+    .append('g')
+    .attr('id', d => `stage${stageId - 1}to${stageId - 1}-rider${d.number}`)
+    .classed('link', true)
+    .call(showLinks);
+}
+
+function addRidersStage(riders, general, stageId, height) {
+  riders
+    .append('g')
+    .attr('id', `stage${stageId}`)
+    .selectAll('g')
+    .data(general[stageId])
+    .enter()
+    .append('g')
+    .attr('id', d => `stage${stageId}-rider${d.number}`)
+    .classed('rider', true)
+    .attr(
+      'transform',
+      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 100})`
+    )
+    .call(showRiders);
 }
 
 function svg(general) {
@@ -78,63 +125,14 @@ function svg(general) {
     .select('svg#stages-svg')
     .attr('width', '200%')
     .attr('height', height);
-  //el.setAttribute('viewport', '100%')
 
-  let stageId = 0;
-  el.append('g')
-    .attr('id', `stage${stageId}`)
-    .selectAll('g')
-    .data([{number: 1, rank: 1}])
-    .enter()
-    .append('g')
-    .attr('id', d => `stage${stageId}-runner${d.number}`)
-    .attr(
-      'transform',
-      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 200})`
-    )
-    .call(showRiders);
+  const links = el.append('g').attr('id', 'links');
+  const riders = el.append('g').attr('id', 'riders');
 
-  stageId = 1;
-  el.append('g')
-    .attr('id', `stage${stageId}`)
-    .selectAll('g')
-    .data(general[stageId])
-    .enter()
-    .append('g')
-    .attr('id', d => `stage${stageId}-runner${d.number}`)
-    .attr(
-      'transform',
-      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 200})`
-    )
-    .call(showRiders);
-
-  stageId = 2;
-  el.append('g')
-    .attr('id', `stage${stageId}`)
-    .selectAll('g')
-    .data(general[stageId])
-    .enter()
-    .append('g')
-    .attr('id', d => `stage${stageId}-runner${d.number}`)
-    .attr(
-      'transform',
-      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 200})`
-    )
-    .call(showRiders);
-
-  stageId = 3;
-  el.append('g')
-    .attr('id', `stage${stageId}`)
-    .selectAll('g')
-    .data(general[stageId])
-    .enter()
-    .append('g')
-    .attr('id', d => `stage${stageId}-runner${d.number}`)
-    .attr(
-      'transform',
-      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 200})`
-    )
-    .call(showRiders);
+  general.slice(0, 9).forEach((_, stageId) => {
+    if (stageId > 0) addLinksStage(links, general, stageId, height);
+    addRidersStage(riders, general, stageId, height);
+  });
 }
 
 load();
