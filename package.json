@@ -18,7 +18,6 @@
   "scripts": {
     "build": "rollup -c && cp src/index.html dist/index.html && cp src/css/main.css dist/main.css",
     "deploy": "now",
-    "deploy:staging": "now --target staging",
     "now-build": "npm run build",
     "preserve": "npm run build",
     "release": "standard-version",
