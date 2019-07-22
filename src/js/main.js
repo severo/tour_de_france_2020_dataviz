@@ -7,36 +7,39 @@ async function load() {
 
   const general = stages.reduce(
     (general, stage, id) => {
-      general.push(
-        stage
-          .map(rider => {
-            const previousId = general[id].findIndex(
-              r => r.number === rider.number
-            );
-            return {
-              previous: general[id][previousId],
-              name: rider.name,
-              number: rider.number,
-              team: rider.team,
-              time:
-                general[id][previousId].time +
-                rider.time -
-                rider.bonif +
-                rider.penal,
-            };
-          })
-          .sort(
-            (a, b) =>
-              a.time > b.time || (a.time === b.time && a.number > b.number)
-          )
-          .map((rider, id) => ({
-            previous: rider.previous,
+      const newStage = stage
+        .map(rider => {
+          const previousId = general[id].findIndex(
+            r => r.number === rider.number
+          );
+          return {
+            previous: general[id][previousId],
             name: rider.name,
             number: rider.number,
             team: rider.team,
-            time: rider.time,
-            rank: id + 1,
-          }))
+            time:
+              general[id][previousId].time +
+              rider.time -
+              rider.bonif +
+              rider.penal,
+          };
+        })
+        .sort(
+          (a, b) =>
+            a.time > b.time || (a.time === b.time && a.number > b.number)
+        );
+      const bestTime = newStage[0].time;
+
+      general.push(
+        newStage.map((rider, id) => ({
+          previous: rider.previous,
+          name: rider.name,
+          number: rider.number,
+          team: rider.team,
+          time: rider.time,
+          rank: id + 1,
+          gap: rider.time - bestTime,
+        }))
       );
       return general;
     },
@@ -48,6 +51,7 @@ async function load() {
           number: rider.number,
           team: rider.team,
           time: 0,
+          gap: 0,
         }))
         .sort((a, b) => a.number > b.number),
     ]
@@ -63,12 +67,21 @@ async function load() {
   svg(general);
 }
 
+function getX(rider) {
+  //return rider.rank * 50;
+  return rider.gap * 4 + 50;
+}
+function getPreviousX(rider) {
+  //return rider.previous.rank * 50;
+  return rider.previous.gap * 4 + 50;
+}
+
 function showLinks(riders) {
   riders
     .append('line')
-    .attr('x1', d => d.previous.rank * 50)
+    .attr('x1', getPreviousX)
     .attr('y1', 100)
-    .attr('x2', d => d.rank * 50)
+    .attr('x2', getX)
     .attr('y2', 0);
 }
 
@@ -106,21 +119,19 @@ function addRidersStage(riders, general, stageId, height) {
   riders
     .append('g')
     .attr('id', `stage${stageId}`)
+    .attr('transform', `translate(0, ${height - 50 - stageId * 100})`)
     .selectAll('g')
     .data(general[stageId])
     .enter()
     .append('g')
     .attr('id', d => `stage${stageId}-rider${d.number}`)
     .classed('rider', true)
-    .attr(
-      'transform',
-      d => `translate(${d.rank * 50}, ${height - 50 - stageId * 100})`
-    )
+    .attr('transform', d => `translate(${getX(d)}, 0)`)
     .call(showRiders);
 }
 
 function svg(general) {
-  const height = 900;
+  const height = 1500;
   const el = d3
     .select('svg#stages-svg')
     .attr('width', '200%')
@@ -129,7 +140,7 @@ function svg(general) {
   const links = el.append('g').attr('id', 'links');
   const riders = el.append('g').attr('id', 'riders');
 
-  general.slice(0, 9).forEach((_, stageId) => {
+  general.slice(0, 15).forEach((_, stageId) => {
     if (stageId > 0) addLinksStage(links, general, stageId, height);
     addRidersStage(riders, general, stageId, height);
   });
