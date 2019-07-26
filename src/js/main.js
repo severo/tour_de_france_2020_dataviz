@@ -77,13 +77,6 @@ async function load() {
       });
   });
 
-  d3.select("#stages")
-    .selectAll("span")
-    .data(filteredGeneral)
-    .enter()
-    .append("span")
-    .text(d => `${d[0].name} - `);
-
   svg(filteredGeneral);
 }
 
@@ -128,7 +121,7 @@ function showLinks(riders, x, rankY, stageY, type = "curved") {
   }
 }
 
-function showRiders(riders) {
+function showRiderAsNumbers(riders) {
   riders
     .append("circle")
     .attr("x", 0)
@@ -144,6 +137,22 @@ function showRiders(riders) {
     .attr("dy", "0.3em");
 }
 
+function showRidersAsPoints(riders) {
+  riders
+    .append("circle")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("r", 5)
+    .classed("rider-as-point", true);
+}
+
+function showRiders(riders, type = "point") {
+  if (type === "number") {
+    showRiderAsNumbers(riders);
+  } else {
+    showRidersAsPoints(riders);
+  }
+}
 function addLinksStage(links, general, stageId, x, rankY, stageY) {
   links
     .append("g")

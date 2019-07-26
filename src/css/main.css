@@ -11,6 +11,10 @@
   stroke: black;
   fill: white;
 }
+#stages-svg #riders .rider circle.rider-as-point {
+  stroke: black;
+  fill: black;
+}
 #stages-svg #riders .rider text {
   stroke: none;
   fill: black;
