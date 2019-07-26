@@ -1,8 +1,10 @@
 #wrapper {
-  overflow-x: scroll;
+  width: 100%;
 }
 
 #stages-svg {
+  margin: 0 auto;
+  display: block;
 }
 
 #stages-svg #riders .rider circle {
