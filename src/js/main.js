@@ -87,7 +87,7 @@ async function load() {
   svg(filteredGeneral);
 }
 
-function showLinks(riders, x, rankY, stageY) {
+function showStraightLinks(riders, x, rankY, stageY) {
   riders
     .append("line")
     .attr("x1", rider => x(rider.previous.gap))
@@ -97,6 +97,35 @@ function showLinks(riders, x, rankY, stageY) {
     )
     .attr("x2", rider => x(rider.gap))
     .attr("y2", rider => stageY(rider.stageId) + rankY(rider.topRank));
+}
+
+function curve(path, x1, y1, x2, y2) {
+  const deltaY = 100;
+  const sign = y1 > y2 ? -1 : 1;
+  path.moveTo(x1, y1);
+  path.bezierCurveTo(x1, y1 + sign * deltaY, x2, y2 - sign * deltaY, x2, y2);
+  return path;
+}
+function showCurvedLinks(riders, x, rankY, stageY) {
+  riders
+    .append("path")
+    .attr("d", rider =>
+      curve(
+        d3.path(),
+        x(rider.previous.gap),
+        stageY(rider.previous.stageId) + rankY(rider.previous.topRank),
+        x(rider.gap),
+        stageY(rider.stageId) + rankY(rider.topRank)
+      ).toString()
+    );
+}
+
+function showLinks(riders, x, rankY, stageY, type = "curved") {
+  if (type === "curved") {
+    return showCurvedLinks(riders, x, rankY, stageY);
+  } else {
+    return showStraightLinks(riders, x, rankY, stageY);
+  }
 }
 
 function showRiders(riders) {
