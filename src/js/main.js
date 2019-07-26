@@ -195,13 +195,16 @@ function addLinksStage(links, general, stageId, x, rankY, stageY) {
   const data = general[stageId].reverse();
   links
     .append("g")
-    .attr("id", `stage${stageId - 1}to${stageId - 1}`)
+    .attr("id", `links-stage${stageId - 1}to${stageId - 1}`)
     //.attr("transform", `translate(0, ${stageY(stageId)})`)
     .selectAll("g")
     .data(data)
     .enter()
     .append("g")
-    .attr("id", d => `stage${stageId - 1}to${stageId - 1}-rider${d.number}`)
+    .attr(
+      "id",
+      d => `links-stage${stageId - 1}to${stageId - 1}-rider${d.number}`
+    )
     .classed("link", true)
     .call(riders => showLinks(riders, x, rankY, stageY));
   // set the data in its original order
@@ -212,13 +215,13 @@ function addRidersStage(riders, general, stageId, x, rankY, stageY) {
   const data = general[stageId].reverse();
   riders
     .append("g")
-    .attr("id", `stage${stageId}`)
+    .attr("id", `riders-stage${stageId}`)
     .attr("transform", `translate(0, ${stageY(stageId)})`)
     .selectAll("g")
     .data(data)
     .enter()
     .append("g")
-    .attr("id", d => `stage${stageId}-rider${d.number}`)
+    .attr("id", d => `riders-stage${stageId}-rider${d.number}`)
     .classed("rider", true)
     .attr("transform", d => `translate(${x(d.gap)}, ${rankY(d.topRank)})`)
     .call(showRiders);
@@ -226,20 +229,43 @@ function addRidersStage(riders, general, stageId, x, rankY, stageY) {
   data.reverse();
 }
 
+function addStageInfo(info, general, stageId, x, stageY, yOffset) {
+  const g = info
+    .append("g")
+    .attr("id", `stages-stage${stageId}`)
+    .attr("transform", `translate(${640}, ${stageY(stageId) + yOffset})`);
+
+  g.append("text")
+    .attr("x", 0)
+    .attr("y", 0)
+    .text(`Stage ${stageId}`);
+
+  g.append("image")
+    .attr(
+      "xlink:href",
+      `https://github.com/severo/tour_de_france_2019_data/raw/master/profile_images/stage-${stageId}.jpeg`
+    )
+    .attr("width", 320)
+    .attr("height", 193)
+    .classed("profile", true);
+}
+
 function svg(general) {
+  const width = 1200;
   const margin = {
     left: 40,
-    right: 40,
+    right: 640,
     stages: { top: 40, bottom: 40 },
-    ranks: { top: 20, bottom: 200 }
+    ranks: { top: 20, bottom: 200 },
+    info: { top: 20 }
   };
 
   const nbRiders = general[0].length;
   const nbStages = general.length;
   const rankHeight = 20;
-  const width = 800;
   const stageHeight =
     nbRiders * rankHeight + margin.ranks.top + margin.ranks.bottom;
+  const infoYOffset = margin.info.top;
   const height = nbStages * stageHeight;
   const maxGap = d3.max(general, stage => d3.max(stage, rider => rider.gap));
 
@@ -264,10 +290,12 @@ function svg(general) {
   //debugger;
   const links = el.append("g").attr("id", "links");
   const riders = el.append("g").attr("id", "riders");
+  const info = el.append("g").attr("id", "info");
 
   general.forEach((_, stageId) => {
     if (stageId > 0) addLinksStage(links, general, stageId, x, rankY, stageY);
     addRidersStage(riders, general, stageId, x, rankY, stageY);
+    addStageInfo(info, general, stageId, x, stageY, infoYOffset);
   });
 }
 
