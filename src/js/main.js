@@ -1,5 +1,30 @@
 import * as d3 from "d3";
+
+// adapted from https://24ways.org/2010/calculating-color-contrast/
+function getContrastYIQ(hexcolor) {
+  const color = hexcolor[0] === "#" ? hexcolor.slice(1) : hexcolor;
+  var r = parseInt(color.substr(0, 2), 16);
+  var g = parseInt(color.substr(2, 2), 16);
+  var b = parseInt(color.substr(4, 2), 16);
+  var yiq = (r * 299 + g * 587 + b * 114) / 1000;
+  return yiq >= 128 ? "black" : "white";
+}
+
 async function load() {
+  const teams = await d3
+    .json(
+      "https://raw.githubusercontent.com/severo/tour_de_france_2019_data/master/teams.json"
+    )
+    .then(
+      json =>
+        new Map(
+          json.map(team => {
+            team.labelColor = getContrastYIQ(team.colour);
+            return [team.name, team];
+          })
+        )
+    );
+
   const url =
     "https://raw.githubusercontent.com/severo/tour_de_france_2019_data/master/stages.json";
   const response = await fetch(url);
@@ -73,6 +98,8 @@ async function load() {
       .sort((a, b) => b.value - a.value)
       .map((rider, topId) => {
         rider.topRank = topId;
+        rider.color = teams.get(rider.team).colour;
+        rider.labelColor = teams.get(rider.team).labelColor;
         return rider;
       });
   });
@@ -110,7 +137,8 @@ function showCurvedLinks(riders, x, rankY, stageY) {
         x(rider.gap),
         stageY(rider.stageId) + rankY(rider.topRank)
       ).toString()
-    );
+    )
+    .style("stroke", rider => rider.color);
 }
 
 function showLinks(riders, x, rankY, stageY, type = "curved") {
@@ -143,7 +171,8 @@ function showRidersAsPoints(riders) {
     .attr("x", 0)
     .attr("y", 0)
     .attr("r", 5)
-    .classed("rider-as-point", true);
+    .classed("rider-as-point", true)
+    .style("fill", rider => rider.color);
 }
 
 function showRiders(riders, type = "point") {
@@ -187,7 +216,7 @@ function svg(general) {
     left: 40,
     right: 40,
     stages: { top: 40, bottom: 40 },
-    ranks: { top: 20, bottom: 80 }
+    ranks: { top: 20, bottom: 120 }
   };
 
   const nbRiders = general[0].length;
