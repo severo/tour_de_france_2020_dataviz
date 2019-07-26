@@ -233,7 +233,7 @@ function addStageInfo(info, general, stageId, x, stageY, yOffset) {
   const g = info
     .append("g")
     .attr("id", `stages-stage${stageId}`)
-    .attr("transform", `translate(${640}, ${stageY(stageId) + yOffset})`);
+    .attr("transform", `translate(${0}, ${stageY(stageId) + yOffset})`);
 
   g.append("text")
     .attr("x", 0)
@@ -253,8 +253,8 @@ function addStageInfo(info, general, stageId, x, stageY, yOffset) {
 function svg(general) {
   const width = 1200;
   const margin = {
-    left: 40,
-    right: 640,
+    left: 400,
+    right: 150,
     stages: { top: 40, bottom: 40 },
     ranks: { top: 20, bottom: 200 },
     info: { top: 20 }
