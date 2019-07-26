@@ -150,6 +150,7 @@ function showLinks(riders, x, rankY, stageY, type = "curved") {
 }
 
 function showRiderAsNumbers(riders) {
+  riders.classed("rider-as-number", true);
   riders
     .append("circle")
     .attr("x", 0)
@@ -166,13 +167,21 @@ function showRiderAsNumbers(riders) {
 }
 
 function showRidersAsPoints(riders) {
+  riders.classed("rider-as-point", true);
   riders
     .append("circle")
     .attr("x", 0)
     .attr("y", 0)
     .attr("r", 5)
-    .classed("rider-as-point", true)
     .style("fill", rider => rider.color);
+
+  riders
+    .append("text")
+    .attr("x", 10)
+    .attr("y", 0)
+    .text(d => d.name)
+    .attr("text-anchor", "left")
+    .attr("dy", "0.3em");
 }
 
 function showRiders(riders, type = "point") {

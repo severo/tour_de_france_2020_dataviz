@@ -7,17 +7,24 @@
   display: block;
 }
 
-#stages-svg #riders .rider circle {
+#stages-svg #riders .rider.rider-as-number circle {
   stroke: black;
   fill: white;
 }
-#stages-svg #riders .rider circle.rider-as-point {
+
+#stages-svg #riders .rider.rider-as-number text {
+  stroke: none;
+  fill: black;
+}
+#stages-svg #riders .rider.rider-as-point circle {
   stroke: black;
   fill: black;
 }
-#stages-svg #riders .rider text {
+#stages-svg #riders .rider.rider-as-point text {
   stroke: none;
   fill: black;
+  font-size: 10px;
+  text-transform: full-width;
 }
 #stages-svg #links .link line,
 #stages-svg #links .link path {
