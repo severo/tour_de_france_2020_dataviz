@@ -32,5 +32,19 @@
   fill: none;
 }
 
+#stages-svg #info text.title {
+  fill: #333;
+  stroke: none;
+}
+#stages-svg #info line {
+  stroke: #bbb;
+  stroke-width: 1;
+  fill: none;
+}
+#stages-svg #info g.tick text {
+  fill: #bbb;
+  stroke: none;
+  font-size: 10px;
+}
 #stages-svg #info image.profile {
 }
