@@ -183,32 +183,38 @@ function showRiders(riders, type = "point") {
   }
 }
 function addLinksStage(links, general, stageId, x, rankY, stageY) {
+  const data = general[stageId].reverse();
   links
     .append("g")
     .attr("id", `stage${stageId - 1}to${stageId - 1}`)
     //.attr("transform", `translate(0, ${stageY(stageId)})`)
     .selectAll("g")
-    .data(general[stageId])
+    .data(data)
     .enter()
     .append("g")
     .attr("id", d => `stage${stageId - 1}to${stageId - 1}-rider${d.number}`)
     .classed("link", true)
     .call(riders => showLinks(riders, x, rankY, stageY));
+  // set the data in its original order
+  data.reverse();
 }
 
 function addRidersStage(riders, general, stageId, x, rankY, stageY) {
+  const data = general[stageId].reverse();
   riders
     .append("g")
     .attr("id", `stage${stageId}`)
     .attr("transform", `translate(0, ${stageY(stageId)})`)
     .selectAll("g")
-    .data(general[stageId])
+    .data(data)
     .enter()
     .append("g")
     .attr("id", d => `stage${stageId}-rider${d.number}`)
     .classed("rider", true)
     .attr("transform", d => `translate(${x(d.gap)}, ${rankY(d.topRank)})`)
     .call(showRiders);
+  // set the data in its original order
+  data.reverse();
 }
 
 function svg(general) {
@@ -216,7 +222,7 @@ function svg(general) {
     left: 40,
     right: 40,
     stages: { top: 40, bottom: 40 },
-    ranks: { top: 20, bottom: 120 }
+    ranks: { top: 20, bottom: 200 }
   };
 
   const nbRiders = general[0].length;
