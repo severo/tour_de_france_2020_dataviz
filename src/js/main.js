@@ -92,8 +92,10 @@ async function load(filtered = true) {
   );
 
   // only show the top_n riders of the last classification
-  const top_n = 12;
-  const topRiders = general[general.length - 1]
+  const top_n = 6;
+  const stageId = 17;
+  //const stageId = general.length - 1;
+  const topRiders = general[stageId]
     .sort((a, b) => b.value - a.value)
     .slice(0, top_n)
     .map(rider => rider.number);
@@ -267,7 +269,7 @@ function addStageInfo(
     .attr("y2", 30);
 
   // Scale
-  const ticksValues = d3.range(0, maxGap, 120);
+  const ticksValues = d3.range(0, maxGap, 60);
   const ticks = g
     .selectAll("g")
     .data(ticksValues)
@@ -319,7 +321,7 @@ function svg(general) {
   const infoYOffset = margin.info.top;
   const height = nbStages * stageHeight;
   //const maxGap = d3.max(general, stage => d3.max(stage, rider => rider.gap));
-  const maxGap = 60 * 11;
+  const maxGap = 60 * 5.5;
 
   const el = d3
     .select("svg#stages-svg")
@@ -341,7 +343,6 @@ function svg(general) {
     //.domain([nbRiders - 1, 0])
     .range([margin.ranks.top, stageHeight - margin.ranks.bottom]);
 
-  //debugger;
   const info = el.append("g").attr("id", "info");
   const links = el.append("g").attr("id", "links");
   const riders = el.append("g").attr("id", "riders");
