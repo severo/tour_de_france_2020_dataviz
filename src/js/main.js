@@ -404,7 +404,8 @@ function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
       {
         note: {
           label: stageAnnotations.text,
-          title: stageAnnotations.title
+          title: stageAnnotations.title,
+          wrap: 240
         },
         nx: 320,
         ny: 193 + 40 + 10,
@@ -535,7 +536,7 @@ function svg(general) {
     20: {
       riderName: "JULIAN ALAPHILIPPE",
       title: "Alaphilippe perd pied",
-      text: `Alaphilippe passe de la deuxième à la cinquième place lors d'une étape écourtée, en perdant 3" dans la montée de 33 kilomètres. Bernal et Thomas arrive ensemble, à 17" du vainqueur Nibali, et 6" devant Buchmann et Kruijswijk. Bernal est maillot jaune.`,
+      text: `Alaphilippe passe de la deuxième à la cinquième place lors d'une étape écourtée, en perdant 3" dans la montée de 33 kilomètres. Bernal et Thomas arrivent ensemble, à 17" du vainqueur Nibali, et 6" devant Buchmann et Kruijswijk. Bernal est maillot jaune.`,
       type: annotationCalloutCircle
     }
   };
