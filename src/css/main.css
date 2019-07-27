@@ -48,3 +48,16 @@
 }
 #stages-svg #info image.profile {
 }
+
+#stages-svg .annotation .annotation-connector path,
+#stages-svg .annotation .annotation-subject path,
+#stages-svg .annotation .annotation-note path {
+  fill: none;
+  fill-opacity: 0;
+  stroke: #eb2e6c;
+}
+#stages-svg .annotation .annotation-note text {
+  fill: #eb2e6c;
+  stroke: none;
+  font-size: 10px;
+}
