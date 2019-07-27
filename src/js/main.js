@@ -405,7 +405,7 @@ function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
         note: {
           label: stageAnnotations.text,
           title: stageAnnotations.title,
-          wrap: 240
+          wrap: 280
         },
         nx: 320,
         ny: 193 + 40 + 10,
@@ -540,12 +540,12 @@ function svg(general) {
       type: annotationCalloutCircle
     }
   };
-  const width = 1200;
+  const width = 980;
   const margin = {
     left: 400,
     right: 150,
     stages: { top: 40, bottom: 40 },
-    ranks: { top: 80, bottom: 160 },
+    ranks: { top: 80, bottom: 200 },
     info: { top: 20 }
   };
 
