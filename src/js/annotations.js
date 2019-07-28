@@ -1,4 +1,5 @@
 import {
+  annotation,
   annotationCalloutCircle,
   annotationCalloutRect,
   annotationCalloutElbow
@@ -128,3 +129,59 @@ export const stagesAnnotations = {
     type: annotationCalloutCircle
   }
 };
+
+function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
+  const rider = riders.find(r => r.name === stageAnnotations.riderName);
+  const subject =
+    "subject" in stageAnnotations
+      ? stageAnnotations.subject
+      : {
+          radius: 20,
+          radiusPadding: 0,
+          xOffset: 0,
+          yOffset: 0
+        };
+  return annotation()
+    .type(stageAnnotations.type)
+    .annotations([
+      {
+        note: {
+          label: stageAnnotations.text,
+          title: stageAnnotations.title,
+          wrap: 280
+        },
+        nx: 320,
+        ny: 193 + 40 + 10,
+        subject: subject,
+        x: x(rider.gap) + subject.xOffset,
+        y: rankY(rider.topRank) + subject.yOffset - yOffset
+      }
+    ]);
+}
+
+export function showAnnotations(
+  parent,
+  general,
+  stageId,
+  x,
+  rankY,
+  stageY,
+  yOffset
+) {
+  const g = parent.append("g").attr("id", `annotations-stage${stageId}`);
+
+  if (stageId in stagesAnnotations) {
+    const tooltip = g.append("g").classed("annotation", true);
+    tooltip.call(
+      createAnnotation(
+        stagesAnnotations[stageId],
+        general[stageId],
+        x,
+        rankY,
+        stageY,
+        yOffset
+      )
+    );
+  }
+  return g;
+}
