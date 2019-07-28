@@ -16,13 +16,13 @@ function svg(general) {
     ranks: { top: 80, bottom: 200 },
     info: { top: 20 }
   };
+  const infoYOffset = margin.info.top;
 
   const nbRiders = general[0].length;
   const nbStages = 21;
   const rankHeight = 20;
   const stageHeight =
     nbRiders * rankHeight + margin.ranks.top + margin.ranks.bottom;
-  const infoYOffset = margin.info.top;
   const height = nbStages * stageHeight;
   //const maxGap = d3.max(general, stage => d3.max(stage, rider => rider.gap));
   const maxGap = 60 * 5.5;
@@ -51,41 +51,58 @@ function svg(general) {
     .domain([0, nbRiders - 1])
     .range([margin.ranks.top, stageHeight - margin.ranks.bottom]);
 
+  const getInfoDims = stageId => ({
+    image: {
+      height: 193,
+      width: 320
+    },
+    height: 193,
+    width: 320,
+    x: 0,
+    y: stageY(stageId) + infoYOffset + 40
+  });
+  const getAnnotationsDims = stageId => ({
+    x: 0,
+    y: stageY(stageId) + infoYOffset
+  });
+  const getGridDims = stageId => ({
+    x: 0,
+    y: stageY(stageId) + infoYOffset
+  });
+  const getRidersDims = stageId => ({
+    x: 0,
+    y: stageY(stageId)
+  });
+
+  const getDims = stageId => ({
+    info: getInfoDims(stageId),
+    annotations: getAnnotationsDims(stageId),
+    grid: getGridDims(stageId),
+    riders: getRidersDims(stageId)
+  });
+
   general.forEach((_, stageId) => {
+    const dims = getDims(stageId);
     if (stageId === 0) return;
-    showGrid(grid, stageId, x, width, margin, maxGap).attr(
-      "transform",
-      `translate(${0}, ${stageY(stageId) + infoYOffset})`
-    );
+    showGrid(grid, dims, stageId, x, width, margin, maxGap);
     if (stageId > 1) showLinks(links, general, stageId, x, rankY, stageY);
-    showRiders(riders, general, stageId, x, rankY).attr(
-      "transform",
-      `translate(0, ${stageY(stageId)})`
-    );
-    showInfo(info, stageId).attr(
-      "transform",
-      `translate(${0}, ${stageY(stageId) + infoYOffset})`
-    );
+    showRiders(riders, dims, general, stageId, x, rankY);
+    showInfo(info, dims, stageId);
     showAnnotations(
       annotations,
+      dims,
       general,
       stageId,
       x,
       rankY,
       stageY,
       infoYOffset
-    ).attr("transform", `translate(${0}, ${stageY(stageId) + infoYOffset})`);
+    );
   });
   const remainingStages = d3.range(general.length, nbStages + 1, 1);
   remainingStages.forEach(stageId => {
-    showGrid(grid, stageId, x, width, margin, maxGap).attr(
-      "transform",
-      `translate(${0}, ${stageY(stageId) + infoYOffset})`
-    );
-    showInfo(info, stageId).attr(
-      "transform",
-      `translate(${0}, ${stageY(stageId) + infoYOffset})`
-    );
+    showGrid(grid, getDims(stageId), stageId, x, width, margin, maxGap);
+    showInfo(info, getDims(stageId), stageId);
   });
 }
 

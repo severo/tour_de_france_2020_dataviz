@@ -1,5 +1,8 @@
-export function showInfo(parent, stageId) {
-  const g = parent.append("g").attr("id", `info-stage${stageId}`);
+export function showInfo(parent, dims, stageId) {
+  const g = parent
+    .append("g")
+    .attr("id", `info-stage${stageId}`)
+    .attr("transform", `translate(${dims.info.x}, ${dims.info.y})`);
 
   g.append("image")
     .attr(
@@ -7,9 +10,9 @@ export function showInfo(parent, stageId) {
       `https://github.com/severo/tour_de_france_2019_data/raw/master/profile_images/stage-${stageId}.jpeg`
     )
     .attr("x", 0)
-    .attr("y", 40)
-    .attr("width", 320)
-    .attr("height", 193)
+    .attr("y", 0)
+    .attr("width", dims.info.image.width)
+    .attr("height", dims.info.image.height)
     .classed("profile", true);
 
   return g;

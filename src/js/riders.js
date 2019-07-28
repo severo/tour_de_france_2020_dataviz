@@ -41,9 +41,12 @@ function showRidersElements(riders, type = "point") {
   }
 }
 
-export function showRiders(parent, general, stageId, x, rankY) {
+export function showRiders(parent, dims, general, stageId, x, rankY) {
   const data = general[stageId].reverse();
-  const g = parent.append("g").attr("id", `riders-stage${stageId}`);
+  const g = parent
+    .append("g")
+    .attr("id", `riders-stage${stageId}`)
+    .attr("transform", `translate(${dims.riders.x}, ${dims.riders.y})`);
 
   g.selectAll("g")
     .data(data)

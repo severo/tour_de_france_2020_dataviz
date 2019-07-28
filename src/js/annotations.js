@@ -161,6 +161,7 @@ function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
 
 export function showAnnotations(
   parent,
+  dims,
   general,
   stageId,
   x,
@@ -168,7 +169,13 @@ export function showAnnotations(
   stageY,
   yOffset
 ) {
-  const g = parent.append("g").attr("id", `annotations-stage${stageId}`);
+  const g = parent
+    .append("g")
+    .attr("id", `annotations-stage${stageId}`)
+    .attr(
+      "transform",
+      `translate(${dims.annotations.x}, ${dims.annotations.y})`
+    );
 
   if (stageId in stagesAnnotations) {
     const tooltip = g.append("g").classed("annotation", true);
