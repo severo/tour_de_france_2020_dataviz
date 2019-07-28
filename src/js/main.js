@@ -63,36 +63,53 @@ function svg(general) {
     x: 0,
     y: stageY(stageId) + infoYOffset + 40
   });
-  const getAnnotationsDims = stageId => ({
-    x: 0,
-    y: stageY(stageId) + infoYOffset
-  });
   const getGridDims = stageId => ({
     x: 0,
     y: stageY(stageId) + infoYOffset
   });
   const getRidersDims = stageId => ({
+    rider: {
+      getX: rider => x(rider.gap),
+      getY: rider => rankY(rider.topRank)
+    },
     x: 0,
     y: stageY(stageId)
+  });
+  const getAnnotationsDims = stageId => ({
+    rider: getRidersDims(stageId).rider,
+    x: 0,
+    y: stageY(stageId) + infoYOffset
+  });
+  const getLinksDims = stageId => ({
+    rider: {
+      getPreviousX: rider => x(rider.previous.gap),
+      getPreviousY: rider =>
+        rankY(rider.previous.topRank) + stageY(stageId - 1),
+      getX: rider => x(rider.gap),
+      getY: rider => rankY(rider.topRank) + stageY(stageId)
+    },
+    x: 0,
+    y: 0
   });
 
   const getDims = stageId => ({
     info: getInfoDims(stageId),
     annotations: getAnnotationsDims(stageId),
     grid: getGridDims(stageId),
-    riders: getRidersDims(stageId)
+    riders: getRidersDims(stageId),
+    links: getLinksDims(stageId)
   });
 
   general.forEach((_, stageId) => {
     const dims = getDims(stageId);
     if (stageId === 0) return;
-    showGrid(grid, dims, stageId, x, width, margin, maxGap);
-    if (stageId > 1) showLinks(links, general, stageId, x, rankY, stageY);
-    showRiders(riders, dims, general, stageId, x, rankY);
-    showInfo(info, dims, stageId);
+    showGrid(grid, dims.grid, stageId, x, width, margin, maxGap);
+    if (stageId > 1) showLinks(links, dims.links, general, stageId);
+    showRiders(riders, dims.riders, general, stageId);
+    showInfo(info, dims.info, stageId);
     showAnnotations(
       annotations,
-      dims,
+      dims.annotations,
       general,
       stageId,
       x,
@@ -103,8 +120,9 @@ function svg(general) {
   });
   const remainingStages = d3.range(general.length, nbStages + 1, 1);
   remainingStages.forEach(stageId => {
-    showGrid(grid, getDims(stageId), stageId, x, width, margin, maxGap);
-    showInfo(info, getDims(stageId), stageId);
+    const dims = getDims(stageId);
+    showGrid(grid, dims.grid, stageId, x, width, margin, maxGap);
+    showInfo(info, dims.info, stageId);
   });
 }
 

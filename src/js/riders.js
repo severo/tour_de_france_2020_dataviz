@@ -41,12 +41,12 @@ function showRidersElements(riders, type = "point") {
   }
 }
 
-export function showRiders(parent, dims, general, stageId, x, rankY) {
+export function showRiders(parent, dims, general, stageId) {
   const data = general[stageId].reverse();
   const g = parent
     .append("g")
     .attr("id", `riders-stage${stageId}`)
-    .attr("transform", `translate(${dims.riders.x}, ${dims.riders.y})`);
+    .attr("transform", `translate(${dims.x}, ${dims.y})`);
 
   g.selectAll("g")
     .data(data)
@@ -54,7 +54,10 @@ export function showRiders(parent, dims, general, stageId, x, rankY) {
     .append("g")
     .attr("id", d => `riders-stage${stageId}-rider${d.number}`)
     .classed("rider", true)
-    .attr("transform", d => `translate(${x(d.gap)}, ${rankY(d.topRank)})`)
+    .attr(
+      "transform",
+      d => `translate(${dims.rider.getX(d)}, ${dims.rider.getY(d)})`
+    )
     .call(showRidersElements);
   // set the data in its original order
   data.reverse();

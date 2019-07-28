@@ -1,15 +1,12 @@
 import * as d3 from "d3";
 
-function showStraightLinks(riders, x, rankY, stageY) {
+function showStraightLinks(riders, dims) {
   riders
     .append("line")
-    .attr("x1", rider => x(rider.previous.gap))
-    .attr(
-      "y1",
-      rider => stageY(rider.previous.stageId) + rankY(rider.previous.topRank)
-    )
-    .attr("x2", rider => x(rider.gap))
-    .attr("y2", rider => stageY(rider.stageId) + rankY(rider.topRank));
+    .attr("x1", dims.rider.getPreviousX)
+    .attr("y1", dims.rider.getPreviousY)
+    .attr("x2", dims.rider.getX)
+    .attr("y2", dims.rider.getX);
 }
 
 function curve(path, x1, y1, x2, y2) {
@@ -19,30 +16,30 @@ function curve(path, x1, y1, x2, y2) {
   path.bezierCurveTo(x1, y1 + sign * deltaY, x2, y2 - sign * deltaY, x2, y2);
   return path;
 }
-function showCurvedLinks(riders, x, rankY, stageY) {
+function showCurvedLinks(riders, dims) {
   riders
     .append("path")
     .attr("d", rider =>
       curve(
         d3.path(),
-        x(rider.previous.gap),
-        stageY(rider.previous.stageId) + rankY(rider.previous.topRank),
-        x(rider.gap),
-        stageY(rider.stageId) + rankY(rider.topRank)
+        dims.rider.getPreviousX(rider),
+        dims.rider.getPreviousY(rider),
+        dims.rider.getX(rider),
+        dims.rider.getY(rider)
       ).toString()
     )
     .style("stroke", rider => rider.color);
 }
 
-function addLinks(riders, x, rankY, stageY, type = "curved") {
+function addLinks(riders, dims, type = "curved") {
   if (type === "curved") {
-    return showCurvedLinks(riders, x, rankY, stageY);
+    return showCurvedLinks(riders, dims);
   } else {
-    return showStraightLinks(riders, x, rankY, stageY);
+    return showStraightLinks(riders, dims);
   }
 }
 
-export function showLinks(parent, general, stageId, x, rankY, stageY) {
+export function showLinks(parent, dims, general, stageId) {
   const data = general[stageId].reverse();
   const g = parent
     .append("g")
@@ -56,7 +53,7 @@ export function showLinks(parent, general, stageId, x, rankY, stageY) {
       d => `links-stage${stageId - 1}to${stageId - 1}-rider${d.number}`
     )
     .classed("link", true)
-    .call(riders => addLinks(riders, x, rankY, stageY));
+    .call(riders => addLinks(riders, dims));
   // set the data in its original order
   data.reverse();
   return g;

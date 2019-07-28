@@ -130,7 +130,15 @@ export const stagesAnnotations = {
   }
 };
 
-function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
+function createAnnotation(
+  dims,
+  stageAnnotations,
+  riders,
+  x,
+  rankY,
+  stageY,
+  yOffset
+) {
   const rider = riders.find(r => r.name === stageAnnotations.riderName);
   const subject =
     "subject" in stageAnnotations
@@ -153,8 +161,8 @@ function createAnnotation(stageAnnotations, riders, x, rankY, stageY, yOffset) {
         nx: 320,
         ny: 193 + 40 + 10,
         subject: subject,
-        x: x(rider.gap) + subject.xOffset,
-        y: rankY(rider.topRank) + subject.yOffset - yOffset
+        x: dims.rider.getX(rider) + subject.xOffset,
+        y: dims.rider.getY(rider) + subject.yOffset - yOffset
       }
     ]);
 }
@@ -172,15 +180,13 @@ export function showAnnotations(
   const g = parent
     .append("g")
     .attr("id", `annotations-stage${stageId}`)
-    .attr(
-      "transform",
-      `translate(${dims.annotations.x}, ${dims.annotations.y})`
-    );
+    .attr("transform", `translate(${dims.x}, ${dims.y})`);
 
   if (stageId in stagesAnnotations) {
     const tooltip = g.append("g").classed("annotation", true);
     tooltip.call(
       createAnnotation(
+        dims,
         stagesAnnotations[stageId],
         general[stageId],
         x,
