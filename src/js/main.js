@@ -54,7 +54,9 @@ function svg(general) {
   const getInfoDims = stageId => ({
     image: {
       height: 193,
-      width: 320
+      width: 320,
+      x: 0,
+      y: 0
     },
     height: 193,
     width: 320,

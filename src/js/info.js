@@ -9,8 +9,8 @@ export function showInfo(parent, dims, stageId) {
       "xlink:href",
       `https://github.com/severo/tour_de_france_2019_data/raw/master/profile_images/stage-${stageId}.jpeg`
     )
-    .attr("x", 0)
-    .attr("y", 0)
+    .attr("x", dims.info.image.x)
+    .attr("y", dims.info.image.y)
     .attr("width", dims.info.image.width)
     .attr("height", dims.info.image.height)
     .classed("profile", true);

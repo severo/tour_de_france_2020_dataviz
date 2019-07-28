@@ -4,6 +4,7 @@ export function showGrid(parent, dims, stageId, x, width, margin, maxGap) {
     .append("g")
     .attr("id", `grid-stage${stageId}`)
     .attr("transform", `translate(${dims.grid.x}, ${dims.grid.y})`);
+
   g.append("text")
     .classed("title", true)
     .attr("x", 20)
