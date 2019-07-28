@@ -16,9 +16,23 @@ h1 {
   display: block;
 }
 
-#stages-svg #riders .rider.rider-as-number circle {
-  stroke: black;
-  fill: white;
+#stages-svg #grid rect {
+  stroke: #bbb;
+  fill: black;
+}
+#stages-svg #grid line {
+  stroke: #bbb;
+  fill: none;
+}
+#stages-svg #grid text {
+  stroke: none;
+  fill: #bbb;
+  font-size: 30px;
+}
+
+#stages-svg #riders .rider circle {
+  stroke-width: 2;
+  fill: none;
 }
 
 #stages-svg #riders .rider.rider-as-number text {
@@ -35,10 +49,10 @@ h1 {
   font-size: 10px;
   text-transform: full-width;
 }
-#stages-svg #links .link line,
-#stages-svg #links .link path {
+#stages-svg #links path {
   stroke: black;
   fill: none;
+  stroke-width: 2;
 }
 
 #stages-svg #info text.title {
