@@ -10,13 +10,9 @@ function svg(general) {
   // Dimensions
   const width = 980;
   const margin = {
-    left: 400,
-    right: 150,
     stages: { top: 40, bottom: 40 },
-    ranks: { top: 80, bottom: 200 },
-    info: { top: 20 }
+    ranks: { top: 80, bottom: 200 }
   };
-  const infoYOffset = margin.info.top;
 
   const nbRiders = general[0].length;
   const nbStages = 21;
@@ -38,10 +34,12 @@ function svg(general) {
   const info = el.append("g").attr("id", "info");
   const annotations = el.append("g").attr("id", "annotations");
 
+  const infoWidth = 400;
+
   const gapX = d3
     .scaleLinear()
     .domain([0, maxGap])
-    .range([0, width - margin.right - margin.left]);
+    .range([0, width - infoWidth]);
   const stageY = d3
     .scaleLinear()
     .domain([1, nbStages])
@@ -52,43 +50,42 @@ function svg(general) {
     .range([margin.ranks.top, stageHeight - margin.ranks.bottom]);
 
   const getInfoDims = stageId => ({
+    height: 193 + 70,
     image: {
       height: 193,
       width: 320,
       x: 0,
-      y: infoYOffset + 40
+      y: 70
     },
-    height: 193,
     title: {
       height: 30,
-      width: margin.left - 10,
+      width: infoWidth - 10,
       x: 10,
       y: 0
     },
-    width: 320,
     x: 0,
     y: stageY(stageId)
   });
   const getScaleDims = stageId => ({
-    width: width - margin.right - margin.left,
+    width: width - infoWidth,
     height: 10,
-    x: margin.left,
-    y: stageY(stageId) + infoYOffset
+    x: infoWidth,
+    y: stageY(stageId) + getInfoDims(stageId).title.height - 10
   });
   const getRidersDims = stageId => ({
-    getX: rider => gapX(rider.gap) + margin.left,
+    getX: rider => gapX(rider.gap) + infoWidth,
     getY: rider => rankY(rider.topRank) + stageY(stageId)
   });
   const getAnnotationsDims = stageId => ({
     rider: getRidersDims(stageId),
     width: 280,
-    x: getInfoDims(stageId).width,
-    y: stageY(stageId) + getInfoDims(stageId).height + 40 + 10 + infoYOffset
+    x: getInfoDims(stageId).image.width,
+    y: stageY(stageId) + getInfoDims(stageId).height + 10
   });
   const getLinksDims = stageId => ({
-    getPreviousX: rider => gapX(rider.previous.gap) + margin.left,
+    getPreviousX: rider => gapX(rider.previous.gap) + infoWidth,
     getPreviousY: rider => rankY(rider.previous.topRank) + stageY(stageId - 1),
-    getX: rider => gapX(rider.gap) + margin.left,
+    getX: rider => gapX(rider.gap) + infoWidth,
     getY: rider => rankY(rider.topRank) + stageY(stageId)
   });
 
