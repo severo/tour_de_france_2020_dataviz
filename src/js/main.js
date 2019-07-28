@@ -1,7 +1,7 @@
 import * as d3 from "d3";
 import { load } from "./load";
 import { showAnnotations } from "./annotations";
-import { showGrid } from "./grid";
+import { showScale } from "./scale";
 import { showLinks } from "./links";
 import { showRiders } from "./riders";
 import { showInfo } from "./info";
@@ -32,16 +32,16 @@ function svg(general) {
     .select("svg#stages-svg")
     .attr("width", width)
     .attr("height", height);
-  const grid = el.append("g").attr("id", "grid");
+  const scale = el.append("g").attr("id", "scale");
   const links = el.append("g").attr("id", "links");
   const riders = el.append("g").attr("id", "riders");
   const info = el.append("g").attr("id", "info");
   const annotations = el.append("g").attr("id", "annotations");
 
-  const x = d3
+  const gapX = d3
     .scaleLinear()
     .domain([0, maxGap])
-    .range([margin.left, width - margin.right]);
+    .range([0, width - margin.right - margin.left]);
   const stageY = d3
     .scaleLinear()
     .domain([1, nbStages])
@@ -56,46 +56,46 @@ function svg(general) {
       height: 193,
       width: 320,
       x: 0,
-      y: 0
+      y: infoYOffset + 40
     },
     height: 193,
-    width: 320,
-    x: 0,
-    y: stageY(stageId) + infoYOffset + 40
-  });
-  const getGridDims = stageId => ({
-    x: 0,
-    y: stageY(stageId) + infoYOffset
-  });
-  const getRidersDims = stageId => ({
-    rider: {
-      getX: rider => x(rider.gap),
-      getY: rider => rankY(rider.topRank)
+    title: {
+      height: 30,
+      width: margin.left - 10,
+      x: 10,
+      y: 0
     },
+    width: 320,
     x: 0,
     y: stageY(stageId)
   });
-  const getAnnotationsDims = stageId => ({
-    rider: getRidersDims(stageId).rider,
-    x: 0,
+  const getScaleDims = stageId => ({
+    width: width - margin.right - margin.left,
+    height: 10,
+    x: margin.left,
     y: stageY(stageId) + infoYOffset
   });
+  const getRidersDims = stageId => ({
+    getX: rider => gapX(rider.gap) + margin.left,
+    getY: rider => rankY(rider.topRank) + stageY(stageId)
+  });
+  const getAnnotationsDims = stageId => ({
+    rider: getRidersDims(stageId),
+    width: 280,
+    x: getInfoDims(stageId).width,
+    y: stageY(stageId) + getInfoDims(stageId).height + 40 + 10 + infoYOffset
+  });
   const getLinksDims = stageId => ({
-    rider: {
-      getPreviousX: rider => x(rider.previous.gap),
-      getPreviousY: rider =>
-        rankY(rider.previous.topRank) + stageY(stageId - 1),
-      getX: rider => x(rider.gap),
-      getY: rider => rankY(rider.topRank) + stageY(stageId)
-    },
-    x: 0,
-    y: 0
+    getPreviousX: rider => gapX(rider.previous.gap) + margin.left,
+    getPreviousY: rider => rankY(rider.previous.topRank) + stageY(stageId - 1),
+    getX: rider => gapX(rider.gap) + margin.left,
+    getY: rider => rankY(rider.topRank) + stageY(stageId)
   });
 
   const getDims = stageId => ({
     info: getInfoDims(stageId),
     annotations: getAnnotationsDims(stageId),
-    grid: getGridDims(stageId),
+    scale: getScaleDims(stageId),
     riders: getRidersDims(stageId),
     links: getLinksDims(stageId)
   });
@@ -103,25 +103,16 @@ function svg(general) {
   general.forEach((_, stageId) => {
     const dims = getDims(stageId);
     if (stageId === 0) return;
-    showGrid(grid, dims.grid, stageId, x, width, margin, maxGap);
+    showScale(scale, dims.scale, stageId, gapX, maxGap);
     if (stageId > 1) showLinks(links, dims.links, general, stageId);
     showRiders(riders, dims.riders, general, stageId);
     showInfo(info, dims.info, stageId);
-    showAnnotations(
-      annotations,
-      dims.annotations,
-      general,
-      stageId,
-      x,
-      rankY,
-      stageY,
-      infoYOffset
-    );
+    showAnnotations(annotations, dims.annotations, general, stageId);
   });
   const remainingStages = d3.range(general.length, nbStages + 1, 1);
   remainingStages.forEach(stageId => {
     const dims = getDims(stageId);
-    showGrid(grid, dims.grid, stageId, x, width, margin, maxGap);
+    showScale(scale, dims.scale, stageId, gapX, maxGap);
     showInfo(info, dims.info, stageId);
   });
 }

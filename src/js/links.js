@@ -3,10 +3,10 @@ import * as d3 from "d3";
 function showStraightLinks(riders, dims) {
   riders
     .append("line")
-    .attr("x1", dims.rider.getPreviousX)
-    .attr("y1", dims.rider.getPreviousY)
-    .attr("x2", dims.rider.getX)
-    .attr("y2", dims.rider.getX);
+    .attr("x1", dims.getPreviousX)
+    .attr("y1", dims.getPreviousY)
+    .attr("x2", dims.getX)
+    .attr("y2", dims.getX);
 }
 
 function curve(path, x1, y1, x2, y2) {
@@ -22,10 +22,10 @@ function showCurvedLinks(riders, dims) {
     .attr("d", rider =>
       curve(
         d3.path(),
-        dims.rider.getPreviousX(rider),
-        dims.rider.getPreviousY(rider),
-        dims.rider.getX(rider),
-        dims.rider.getY(rider)
+        dims.getPreviousX(rider),
+        dims.getPreviousY(rider),
+        dims.getX(rider),
+        dims.getY(rider)
       ).toString()
     )
     .style("stroke", rider => rider.color);

@@ -41,16 +41,17 @@ h1 {
   fill: none;
 }
 
-#stages-svg #grid text.title {
+#stages-svg #info text.title {
   fill: #333;
   stroke: none;
 }
-#stages-svg #grid line {
+#stages-svg #info line,
+#stages-svg #scale line {
   stroke: #bbb;
   stroke-width: 1;
   fill: none;
 }
-#stages-svg #grid g.tick text {
+#stages-svg #scale g.tick text {
   fill: #bbb;
   stroke: none;
   font-size: 10px;
