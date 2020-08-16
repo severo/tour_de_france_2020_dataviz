@@ -1,5 +1,5 @@
 {
   "builds": [{"src": "package.json", "use": "@now/static-build"}],
-  "name": "tour-de-france-2019-dataviz",
+  "name": "tour-de-france-2020-dataviz",
   "version": 2
 }

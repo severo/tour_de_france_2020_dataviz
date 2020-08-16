@@ -12,7 +12,7 @@ function getContrastYIQ(hexcolor) {
 
 async function getGeneralFromStages(teams) {
   const url =
-    "https://raw.githubusercontent.com/severo/tour_de_france_2019_data/master/stages.json";
+    "https://raw.githubusercontent.com/severo/tour_de_france_2020_data/master/stages.json";
   const response = await fetch(url);
   const stages = await response.json();
 
@@ -82,7 +82,7 @@ async function getGeneralFromStages(teams) {
 
 async function getGeneralFromGeneralClassification(teams) {
   const url =
-    "https://raw.githubusercontent.com/severo/tour_de_france_2019_data/master/general_classification.json";
+    "https://raw.githubusercontent.com/severo/tour_de_france_2020_data/master/general_classification.json";
   const response = await fetch(url);
   const stages = await response.json();
 
@@ -137,7 +137,7 @@ export async function load(
 ) {
   const teams = await d3
     .json(
-      "https://raw.githubusercontent.com/severo/tour_de_france_2019_data/master/teams.json"
+      "https://raw.githubusercontent.com/severo/tour_de_france_2020_data/master/teams.json"
     )
     .then(
       json =>
