@@ -25,7 +25,7 @@ export function showInfo(parent, dims, stageId) {
   g.append("image")
     .attr(
       "xlink:href",
-      `https://github.com/severo/tour_de_france_2019_data/raw/master/profile_images/stage-${stageId}.jpeg`
+      `https://github.com/severo/tour_de_france_2020_data/raw/master/profile_images/stage-${stageId}.jpeg`
     )
     .attr("x", dims.image.x)
     .attr("y", dims.image.y)

@@ -1,7 +1,7 @@
 # Tour de France 2019 - datavisualization
 
 Data: see
-[severo/tour_de_france_2019_data](https://github.com/severo/tour_de_france_2019_data).
+[severo/tour_de_france_2020_data](https://github.com/severo/tour_de_france_2020_data).
 
 URL: https://tour-de-france-2019-dataviz.severo1.now.sh/
 
